@@ -17,3 +17,4 @@ A couple of examples:
 
 To export a csv file: `DesiredData.to_csv('DesiredDataOutput.csv')`
 To use matploblib within Pandas to plot: `DesiredData.plot(subplots=True)`
+
