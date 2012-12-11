@@ -27,6 +27,7 @@ columnmapping = {1:'X1',2:'X2',3:'X3',4:'X4',5:'X5',6:'X6',7:'X7',8:'X8',9:'X9',
 
 #Loop through the desired points in the extractor file, open the txt files, and extract the desired data to the dataframe
 i=0
+LastFileLoaded = 'None'
 while i < len(ExtractorConfig.DesiredPoint):
 #    print ExtractorConfig.ix[i]['DesiredPoint']
 
@@ -35,10 +36,11 @@ while i < len(ExtractorConfig.DesiredPoint):
     try:
         ClaytonLabel = ExtractorConfig.ix[i]['DesiredPoint']
         File = PointLibrary.get_value(ClaytonLabel,'StoreFilename')
+        DesiredDataColumnName= PointLibrary.get_value(ClaytonLabel,'TypeForCubeVis')
         Channel = PointLibrary.get_value(ClaytonLabel,'Channel')
     except:
         print 'Error: Your Desired Point: '+ClaytonLabel+' isnt found in the Pointlist'
-        i+=1; LastFileLoaded = 'None'
+        i+=1;
         continue
 
     if File != LastFileLoaded:
@@ -57,12 +59,12 @@ while i < len(ExtractorConfig.DesiredPoint):
 
     #If this is the first time loaded then configure the DesiredData frame, else merge the new data into Desired
     try:
-        DesiredData
+        BubbleData
     except NameError:
-        DesiredData = pd.DataFrame(DesiredPoint,columns=[ClaytonLabel])
+        BubbleData = pd.DataFrame(DesiredPoint,columns=[DesiredDataColumnName])
     else:
-        DataAdd = pd.DataFrame(DesiredPoint,columns=[ClaytonLabel])
-        DesiredData = pd.merge(DesiredData,DataAdd,left_index=True,right_index=True,how='outer')
+        DataAdd = pd.DataFrame(DesiredPoint,columns=[DesiredDataColumnName])
+        BubbleData = pd.merge(BubbleData,DataAdd,left_index=True,right_index=True,how='outer')
     print 'Finished Loading '+ClaytonLabel
     LastFileLoaded = File
     i+=1
